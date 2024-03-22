@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web-based MySQL Interaction</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+    
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            background-color: rgba(0, 0, 0, 0.349);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 20%;
+            margin: 50px auto;
+            background-color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        form {
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 16px;
+            box-sizing:border-box;
+            border: 1px solid black;
+            border-radius: 4px;
+        }
+        
+            
+
+        
+        .button-container {
+            width: 100%;
+            margin: 50px 0;
+            padding: 20px;
+            background-color: transparent;
+            
+            border-radius: 50px;
+            display: flex;
+            
+            
+            
+            
+            top: 0;
+            left: -20%;
+            transform: translateX(-10%);
+            transform: translateY(-50%);
+           
+            
+        }
+
+        button {
+            align-items:left;
+            background-color:transparent;
+            color: black;
+            padding: 1px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor:context-menu;
+            transition: background-color 1s ease, padding 0.5s ease;
+            
+            
+        }
+
+        button:hover {
+            background-color: cyan;
+            color: white;
+            padding: 10px 15px;
+        }
+
+        p {
+            text-align: center;
+        }
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 110px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(17px);
+            --webkit-backdrop-filter: blur(17px);
+            border-right: 1px solid rgba(255, 255, 255, 0.7);
+            transition: width 0.3s ease;
+        }
+        .sidebar:hover{
+            width: 260px;
+        }
+        .sidebar .logo {
+            color: #000;
+            display: flex;
+            align-items: center;
+            padding: 25px 10px 15px;
+        }
+
+        .logo img {
+            width: 43px;
+            border-radius: 50%;
+        }
+
+        .logo h2 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-left: 15px;
+            display: none;
+        }       
+
+        .sidebar:hover .logo h2 {
+            display: block;
+        }
+
+        .sidebar .links {
+            list-style: none;
+            margin-top: 20px;
+            overflow-y: auto;
+            scrollbar-width: none;
+            height: calc(100% - 140px);
+        }
+
+        .sidebar .links::-webkit-scrollbar {
+            display: none;
+        }
+
+        .links li {
+            display: flex;
+            border-radius: 4px;
+            align-items: center;
+        }
+
+        .links li:hover {
+            cursor: pointer;
+            background: #fff;
+        }
+
+        .links h4 {
+            color: #222;
+            font-weight: 500;
+            display: none;
+            margin-bottom: 10px;
+        }
+
+        .sidebar:hover .links h4 {
+            display: block;
+        }
+
+        .links hr {
+            margin: 10px 8px;
+            border: 1px solid #4c4c4c;
+        }
+
+        .sidebar:hover .links hr {
+            border-color: transparent;
+        }
+
+        .links li span {
+            padding: 12px 10px;
+        }
+
+        .links li a {
+            padding: 10px;
+            color: #000;
+            display: none;
+            font-weight: 500;
+            white-space: nowrap;
+            text-decoration: none;
+        }
+
+        .sidebar:hover .links li a {
+            display: block;
+        }
+
+        .links .logout-link {
+            margin-top: 20px;
+        }
+     
+    </style>
+</head>
+<body>
+
+    
+    
+    <h1>UKAASH DATABASE</h1>
+    <div class="container">
+        <form action="/insert_data" method="post">
+            <label for="month">Month:</label>
+            <select id="month" name="month" required>
+                {% for month in month_name.split('\n') %}
+                    {% if month %}
+                        <option value="{{ month }}">{{ month }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select><br>
+
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" placeholder="Enter name" required><br>
+
+            <label for="procedure_type">Procedure Type:</label>
+            <select id="procedure_type" name="procedure_type" required>
+                {% for procedure in procedure_name %}
+                    {% for line in procedure.split('\n') %}
+                        <option value="{{ line }}">{{ line }}</option>
+                    {% endfor %}    
+                    
+                {% endfor %}    
+            </select><br>
+            
+
+            <label for="amount">Amount:</label>
+            <input type="number" id="amount" name="amount" placeholder="Enter amount" required><br>
+
+            <label for="day">Day:</label>
+            <select id="day" name="day" required>
+                {% for day in day_name.split('\n') %}
+                    {% if day %}
+                        <option value="{{ day }}">{{ day }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select><br>
+            
+
+            <button type="submit">Submit</button>
+        </form>
+    </div> 
+    <aside class="sidebar">
+        <div class="logo">
+          <img src="instalogo.jpg" alt="logo">
+          <h2>Main Menu</h2>
+        </div>
+        <ul class="links">
+          <h4>Main Menu</h4>
+          <li>
+            <span class="material-symbols-outlined">dashboard</span>
+            <a href="/">Dashboard</a>
+          </li>
+          
+          <li>
+            <span class="material-symbols-outlined">flag</span>
+            <a href="/login">Reports</a>
+          </li>
+          <hr>
+          <h4>Advanced</h4>
+         
+          <li>
+            <span class="material-symbols-outlined">group</span>
+            <a href="#">Developer </a>
+          </li>
+          
+          
+          <li>
+            <span class="material-symbols-outlined">monitoring</span>
+            <a href="/get_special">Analytic</a>
+          </li>
+          <hr>
+          <h4>Account</h4>
+          <li>
+            <span class="material-symbols-outlined">bar_chart</span>
+            <a href="#">Overview</a>
+          </li>
+          <li>
+            <span class="material-symbols-outlined">mail</span>
+            <a href="#">Message</a>
+          </li>
+          <li>
+            <span class="material-symbols-outlined">settings</span>
+            <a href="#">Settings</a>
+          </li>
+          <li class="logout-link">
+            <span class="material-symbols-outlined">logout</span>
+            <a href="#">Logout</a>
+          </li>
+        </ul>
+      </aside>
+    
+    
+    <p>Visit my favorite website: <a href="https://ukaashskinclinic.pk/" target="_blank"> Visit ukaashskinclinic.pk</a></p>
+    
+    
+    
+
+    
+    
+</body>
+</html>
